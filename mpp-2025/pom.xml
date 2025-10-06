@@ -14,6 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
+        <flyway.version>11.13.2</flyway.version>
     </properties>
 
     <dependencies>
@@ -22,8 +23,13 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
-            <!-- optional: declare as runtime since your app, not tests, uses it -->
-            <!-- <scope>runtime</scope> -->
+        </dependency>
+
+        <!-- Flyway core (runtime, programmatic use) -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
         </dependency>
 
         <!-- JUnit 5 aggregate (API + Engine + Params) -->
@@ -55,6 +61,36 @@
                 <configuration>
                     <useModulePath>false</useModulePath>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>${flyway.version}</version>
+                <configuration>
+                    <!-- read your existing env vars -->
+                    <url>${env.DATABASE_URL}</url>
+                    <user>${env.DATABASE_UNAME}</user>
+                    <password>${env.DATABASE_PASS}</password>
+
+                    <!-- migrations live here by convention -->
+                    <locations>
+                        <location>filesystem:src/main/resources/db/migration</location>
+                    </locations>
+
+                    <!-- helpful safety defaults for shared hosts -->
+                    <cleanDisabled>true</cleanDisabled>
+                    <validateOnMigrate>true</validateOnMigrate>
+                </configuration>
+
+                <!-- make sure the plugin sees a JDBC driver at plugin runtime -->
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>8.0.33</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
