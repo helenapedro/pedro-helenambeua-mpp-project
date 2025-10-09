@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeeRepository {
-    // ---------- Demo: CRUD lifecycle ----------
+    // ---------- CRUD lifecycle ----------
     public static void main(String[] args) {
         EmployeeRepository repo = new EmployeeRepository();
 
@@ -34,7 +34,7 @@ public class EmployeeRepository {
         if (fetched != null) {
             fetched.setName("Helena Repo (Updated)");
             fetched.setSalary(160000.00);
-            // optionally change address/department ids
+            // optional: change address/department ids
             System.out.println("\nUPDATE -> " + repo.update(fetched));
         }
 
